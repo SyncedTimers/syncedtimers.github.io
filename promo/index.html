@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Promo Code – SyncedTimers</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      background: #f5fdf9;
+      color: #222;
+      padding: 2rem;
+      max-width: 700px;
+      margin: auto;
+    }
+    h1 {
+      color: #2a7d59;
+    }
+    button {
+      background: #2a7d59;
+      color: white;
+      font-size: 1rem;
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+    #codeBox {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      border: 2px dashed #2a7d59;
+      border-radius: 8px;
+      font-size: 1.25rem;
+      text-align: center;
+      background: #eafff4;
+    }
+    a {
+      color: #2a7d59;
+      text-decoration: none;
+    }
+    img {
+      width: 120px;
+      display: block;
+      margin: auto;
+      margin-bottom: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+  <img src="/SyncedTimers_logo.png" alt="SyncedTimers Logo">
+  <h1>🎁 Claim Your Promo Code</h1>
+  <p>Thank you for supporting the SyncedTimers app! Click below to claim your unique promo code while supplies last.</p>
+  
+  <button onclick="claimCode()">Claim Promo Code</button>
+
+  <div id="codeBox">No code claimed yet.</div>
+
+  <p style="margin-top: 2rem;"><a href="/">← Back to Home</a></p>
+
+  <script>
+    async function claimCode() {
+      const box = document.getElementById('codeBox');
+      box.textContent = 'Fetching code...';
+
+      try {
+        const res = await fetch("https://script.google.com/macros/s/AKfycbxmdJy7uaSqEoEt_uL1qikCMlQTlk_hXd-w_n34rYWXfKheUU6CqfRku-0diKG1BwbH/exec");
+        const code = await res.text();
+        box.textContent = code.includes("No more codes")
+          ? "😔 Sorry, all codes have been claimed."
+          : `🎉 Your code: ${code}`;
+      } catch (err) {
+        box.textContent = "⚠️ Error fetching code. Please try again later.";
+        console.error(err);
+      }
+    }
+  </script>
+</body>
+</html>
