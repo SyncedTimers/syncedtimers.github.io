@@ -86,31 +86,23 @@
   <script>
     async function claimCode() {
       const box = document.getElementById('codeBox');
-      const email = document.getElementById('emailInput').value.trim();
-
-      if (!email || !email.includes("@")) {
-        box.textContent = "⚠️ Please enter a valid email.";
-        return;
-      }
-
-      box.textContent = "Fetching code...";
-
+      box.textContent = "🔄 Testing fetch connection...";
+    
       try {
         const res = await fetch("https://script.google.com/macros/s/AKfycbxmdJy7uaSqEoEt_uL1qikCMlQTlk_hXd-w_n34rYWXfKheUU6CqfRku-0diKG1BwbH/exec", {
           method: "POST",
-          body: JSON.stringify({ email }),
+          body: JSON.stringify({}), // No email sent
           headers: {
             "Content-Type": "application/json"
           }
         });
-
-        const code = await res.text();
-        box.textContent = code.startsWith("😔")
-          ? code
-          : `🎉 Your code: ${code}`;
+    
+        const result = await res.text();
+        console.log("✅ Response from script:", result);
+        box.textContent = result;
       } catch (err) {
-        console.error(err);
-        box.textContent = "⚠️ Error fetching code. Please try again later.";
+        console.error("❌ Fetch failed:", err);
+        box.textContent = "⚠️ Fetch failed: " + err.message;
       }
     }
   </script>
