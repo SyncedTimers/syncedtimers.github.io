@@ -45,13 +45,23 @@
       margin: auto;
       margin-bottom: 1.5rem;
     }
+    input[type="email"] {
+      padding: 0.6rem;
+      width: 100%;
+      max-width: 400px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+      margin-top: 1rem;
+    }
   </style>
 </head>
 <body>
   <img src="/SyncedTimers_logo.png" alt="SyncedTimers Logo">
   <h1>🎁 Claim Your Promo Code</h1>
-  <p>Thank you for supporting the SyncedTimers app! Click below to claim your unique promo code while supplies last.</p>
-  
+  <p>Thank you for supporting the SyncedTimers app! Enter your email below to claim your unique promo code while supplies last.</p>
+
+  <input type="email" id="emailInput" placeholder="you@example.com" required>
   <button onclick="claimCode()">Claim Promo Code</button>
 
   <div id="codeBox">No code claimed yet.</div>
@@ -76,17 +86,31 @@
   <script>
     async function claimCode() {
       const box = document.getElementById('codeBox');
-      box.textContent = 'Fetching code...';
+      const email = document.getElementById('emailInput').value.trim();
+
+      if (!email || !email.includes("@")) {
+        box.textContent = "⚠️ Please enter a valid email.";
+        return;
+      }
+
+      box.textContent = "Fetching code...";
 
       try {
-        const res = await fetch("https://script.google.com/macros/s/AKfycbxmdJy7uaSqEoEt_uL1qikCMlQTlk_hXd-w_n34rYWXfKheUU6CqfRku-0diKG1BwbH/exec");
+        const res = await fetch("https://script.google.com/macros/s/AKfycbxmdJy7uaSqEoEt_uL1qikCMlQTlk_hXd-w_n34rYWXfKheUU6CqfRku-0diKG1BwbH/exec", {
+          method: "POST",
+          body: JSON.stringify({ email }),
+          headers: {
+            "Content-Type": "application/json"
+          }
+        });
+
         const code = await res.text();
-        box.textContent = code.includes("No more codes")
-          ? "😔 Sorry, all codes have been claimed."
+        box.textContent = code.startsWith("😔")
+          ? code
           : `🎉 Your code: ${code}`;
       } catch (err) {
-        box.textContent = "⚠️ Error fetching code. Please try again later.";
         console.error(err);
+        box.textContent = "⚠️ Error fetching code. Please try again later.";
       }
     }
   </script>
