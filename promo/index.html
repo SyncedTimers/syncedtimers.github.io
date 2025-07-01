@@ -106,17 +106,31 @@
         console.log("✅ Server response:", promoCode);
   
         box.innerHTML = `
-          <div style="text-align: center;">
-            🎉 <strong>Your Promo Code!</strong><br><br>
-            <span id="promoCodeText" style="font-weight:bold; font-size:1.5em; cursor:pointer;">
+          <div style="text-align: center; line-height: 1.4;">
+            <div style="margin-bottom: 0.6em; font-size: 1.1em;">
+              🎉 Your Promo Code
+            </div>
+        
+            <div id="promoCodeText" style="
+              font-size: 1.2em;
+              padding: 0.5em 1em;
+              border: 2px dashed #228B22;
+              border-radius: 10px;
+              background-color: #f0fff4;
+              display: inline-block;
+              cursor: pointer;
+              word-break: break-word;
+              max-width: 90vw;
+            ">
               ${promoCode}
-            </span>
-            <div style="margin-top: 0.3em; font-size: 0.85em; color: #555;">
-              (Tap to copy)
+            </div>
+        
+            <div style="margin-top: 0.5em; font-size: 0.9em; color: #555;">
+              (Tap to copy to clipboard)
             </div>
           </div>
         `;
-  
+
         // Enable tap-to-copy behavior
         const promoEl = document.getElementById("promoCodeText");
         promoEl.addEventListener("click", () => {
@@ -124,6 +138,7 @@
             .then(() => alert("✅ Promo code copied to clipboard!"))
             .catch(() => alert("⚠️ Could not copy. Please press and hold to copy manually."));
         });
+
   
       } catch (err) {
         console.error("❌ Fetch failed:", err);
