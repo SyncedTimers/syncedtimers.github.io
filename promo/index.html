@@ -90,24 +90,44 @@
       const email = emailInput.value.trim();
   
       if (!email) {
-        box.textContent = "⚠️ Please enter a valid email.";
+        box.innerHTML = "⚠️ Please enter a valid email.";
         return;
       }
   
-      box.textContent = "🔄 Claiming your promo code...";
+      box.innerHTML = "🔄 Claiming your promo code...";
       console.log("📧 Email being sent:", email);
   
       const url = `https://script.google.com/macros/s/AKfycbxmdJy7uaSqEoEt_uL1qikCMlQTlk_hXd-w_n34rYWXfKheUU6CqfRku-0diKG1BwbH/exec?email=${encodeURIComponent(email)}`;
   
       try {
         const res = await fetch(url);
-        const result = await res.text();
+        const promoCode = await res.text();
   
-        console.log("✅ Server response:", result);
-        box.textContent = `🎉 Your Promo Code: ${result}`;
+        console.log("✅ Server response:", promoCode);
+  
+        box.innerHTML = `
+          <div style="text-align: center;">
+            🎉 <strong>Your Promo Code!</strong><br><br>
+            <span id="promoCodeText" style="font-weight:bold; font-size:1.5em; cursor:pointer;">
+              ${promoCode}
+            </span>
+            <div style="margin-top: 0.3em; font-size: 0.85em; color: #555;">
+              (Tap to copy)
+            </div>
+          </div>
+        `;
+  
+        // Enable tap-to-copy behavior
+        const promoEl = document.getElementById("promoCodeText");
+        promoEl.addEventListener("click", () => {
+          navigator.clipboard.writeText(promoEl.textContent.trim())
+            .then(() => alert("✅ Promo code copied to clipboard!"))
+            .catch(() => alert("⚠️ Could not copy. Please press and hold to copy manually."));
+        });
+  
       } catch (err) {
         console.error("❌ Fetch failed:", err);
-        box.textContent = "⚠️ Could not claim a promo code. Try again soon.";
+        box.innerHTML = "⚠️ Could not claim a promo code. Try again soon.";
       }
     }
   </script>
