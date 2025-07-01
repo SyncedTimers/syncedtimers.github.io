@@ -84,15 +84,42 @@
   </p>
   
   <script>
+    let attemptCount = 0;
+  
     async function claimCode() {
       const box = document.getElementById('codeBox');
       const emailInput = document.getElementById('emailInput');
-      const email = emailInput.value.trim();
+      const email = emailInput.value.trim().toLowerCase();
   
-      if (!email) {
-        box.innerHTML = "⚠️ Please enter a valid email.";
+      // Validation rules
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const bannedWords = [
+        'test', 'asdf', 'qwerty', 'abc', '123', 'fake', 'dummy',
+        'first', 'last', 'none', 'null', 'noreply', 'no-reply',
+        'spam', 'temp', 'temporary', 'example', 'your', 'youremail',
+        'sample', 'demo', 'email', 'mailinator', 'trash', 'invalid'
+      ];
+  
+      const isValidFormat = emailPattern.test(email);
+      const isBanned = bannedWords.some(word => email.includes(word));
+      const isGmail = email.endsWith('@gmail.com');
+  
+      // Fail conditions
+      if (!isValidFormat || isBanned || !isGmail) {
+        attemptCount++;
+  
+        if (attemptCount >= 2) {
+          box.innerHTML = "🚫 Too many suspicious attempts. Try again tomorrow.";
+          emailInput.disabled = true;
+          document.querySelector("button").disabled = true;
+        } else {
+          box.innerHTML = "⚠️ That looks like a fake or invalid Gmail address.";
+        }
         return;
       }
+  
+      // Reset counter on success
+      attemptCount = 0;
   
       box.innerHTML = "🔄 Claiming your promo code...";
       console.log("📧 Email being sent:", email);
@@ -107,12 +134,9 @@
   
         box.innerHTML = `
           <div style="text-align: center; line-height: 1.4;">
-            <!-- Title -->
             <div style="margin-bottom: 0.6em; font-size: 1.1em;">
               🎉 Your Promo Code
             </div>
-        
-            <!-- Promo Code (boxed only) -->
             <div id="promoCodeText" style="
               font-size: 1.2em;
               padding: 0.5em 1em;
@@ -126,15 +150,12 @@
             ">
               ${promoCode}
             </div>
-        
-            <!-- Helper text -->
             <div style="margin-top: 0.5em; font-size: 0.9em; color: #555;">
               (Tap to copy to clipboard)
             </div>
           </div>
         `;
-
-
+  
         // Enable tap-to-copy behavior
         const promoEl = document.getElementById("promoCodeText");
         promoEl.addEventListener("click", () => {
@@ -142,7 +163,6 @@
             .then(() => alert("✅ Promo code copied to clipboard!"))
             .catch(() => alert("⚠️ Could not copy. Please press and hold to copy manually."));
         });
-
   
       } catch (err) {
         console.error("❌ Fetch failed:", err);
