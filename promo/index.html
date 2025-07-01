@@ -109,9 +109,9 @@
           <div style="text-align: center; line-height: 1.4;">
             <!-- Title -->
             <div style="margin-bottom: 0.6em; font-size: 1.1em;">
-              <div>🎉 Your Promo Code</div>
+              🎉 Your Promo Code
             </div>
-          
+        
             <!-- Promo Code (boxed only) -->
             <div id="promoCodeText" style="
               font-size: 1.2em;
@@ -124,15 +124,16 @@
               word-break: break-word;
               max-width: 90vw;
             ">
-              promoCode
+              ${promoCode}
             </div>
-          
+        
             <!-- Helper text -->
             <div style="margin-top: 0.5em; font-size: 0.9em; color: #555;">
-              <div>(Tap to copy to clipboard)</div>
+              (Tap to copy to clipboard)
             </div>
           </div>
         `;
+
 
         // Enable tap-to-copy behavior
         const promoEl = document.getElementById("promoCodeText");
